@@ -96,12 +96,16 @@ class Mandrill
     }
 
     /**
-     * @param array $globalMergeVars
+     * @param array|ArrayList $globalMergeVars
      *
      * @return $this
      */
-    public function setGlobalMergeVars(array $globalMergeVars)
+    public function setGlobalMergeVars($globalMergeVars)
     {
+        if (is_array($globalMergeVars)) {
+            $globalMergeVars = ArrayList::create($globalMergeVars);
+        }
+
         $this->globalMergeVars = $globalMergeVars;
 
         return $this;
@@ -119,16 +123,20 @@ class Mandrill
      * This method assumes you include the rcpt value, if all merge vars are the same then see use setGlobalMergeVars
      * alternatively, use setMergeVarForRecipient
      *
-     * @param array $mergeVars
+     * @param array|ArrayList $mergeVars
      */
-    public function setMergeVars(array $mergeVars)
+    public function setMergeVars($mergeVars)
     {
+        if (is_array($mergeVars)) {
+            $mergeVars = ArrayList::create($mergeVars);
+        }
+
         $this->mergeVars = $mergeVars;
     }
 
     /**
      * @param string $rcpt
-     * @param array  $mergeVars
+     * @param array $mergeVars
      *
      * @return $this
      */
@@ -324,7 +332,7 @@ class Mandrill
         if (!$this->globalMergeVars->count()) {
             // i have no idea why Mandrill enforces this, I believe this was prior to Mailchimp adopting it
             // low and behold, global_merge_vars is also valid but this is still required.
-            $this->setGlobalMergeVars([['name'=>'backwards', 'content' => 'compatibility']]);
+            $this->setGlobalMergeVars([['name' => 'backwards', 'content' => 'compatibility']]);
         }
 
         if ($usingTemplate) {
